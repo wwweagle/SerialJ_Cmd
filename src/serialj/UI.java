@@ -45,9 +45,10 @@ public class UI extends javax.swing.JFrame {
         txtFileName = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtPerf = new javax.swing.JTextArea();
+        txtCurrSta = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("ZX Serial Reader");
+        setTitle("ZX Serial  V1");
 
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
 
@@ -73,6 +74,8 @@ public class UI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtLog);
 
         txtFileName.setColumns(20);
+        txtFileName.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        txtFileName.setLineWrap(true);
         txtFileName.setRows(2);
         txtFileName.setText("I:\\temp1\\temp2\\temp3.ser");
         jScrollPane2.setViewportView(txtFileName);
@@ -82,6 +85,8 @@ public class UI extends javax.swing.JFrame {
         txtPerf.setRows(5);
         jScrollPane3.setViewportView(txtPerf);
 
+        txtCurrSta.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -90,7 +95,9 @@ public class UI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                            .addComponent(txtCurrSta))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -118,7 +125,10 @@ public class UI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -138,17 +148,22 @@ public class UI extends javax.swing.JFrame {
 
     private void btnRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecordActionPerformed
         p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
-        p.setFileToPath(txtFileName.getText());
         p.setUpdater(u);
-        p.start();
-        btnRecord.setEnabled(false);
-        btnStop.setEnabled(true);
+        if (p.setFileToPath(txtFileName.getText())) {
+            p.start();
+            btnRecord.setEnabled(false);
+            txtFileName.setEditable(false);
+            btnStop.setEnabled(true);
+            this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + "ZX Serial V1");
+        }
     }//GEN-LAST:event_btnRecordActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         p.stop();
         btnRecord.setEnabled(true);
         btnStop.setEnabled(false);
+        txtFileName.setEditable(true);
+        this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + "ZX Serial V1");
     }//GEN-LAST:event_btnStopActionPerformed
 
     /**
@@ -183,53 +198,87 @@ public class UI extends javax.swing.JFrame {
     public class LogUpdator {
 
         final private List<String> logList;
-        final private boolean updating;
+//        private boolean updating;
         private final List<Integer> performance;
         private final List<Integer> hit;
         private final List<Integer> miss;
         private final List<Integer> falseAlarm;
         private final List<Integer> correctRejection;
         final private String[] hName;
+        private int[] currSta;//
 
         public LogUpdator() {
             logList = new ArrayList<>();
-            updating = true;
+//            updating = true;
             performance = new ArrayList<>();
             hit = new ArrayList<>();
             miss = new ArrayList<>();
             falseAlarm = new ArrayList<>();
             correctRejection = new ArrayList<>();
             hName = eventNames.init();
+            currSta = new int[4];//Hit,Miss,False,Reject
 
         }
-        
-        private void updatePerf(){
-            
+
+        private void updatePerf() {
+            String perf = "";
+            for (int i = performance.size(); i > 0; i--) {
+                perf += "S" + String.format("%2d", i) + ",";
+                int idx = i - 1;
+                perf += "P" + String.format("%3d", performance.get(idx)) + ",";
+                perf += "H" + String.format("%2d", hit.get(idx)) + ",";
+                perf += "M" + String.format("%2d", miss.get(idx)) + ",";
+                perf += "F" + String.format("%2d", falseAlarm.get(idx)) + ",";
+                perf += "C" + String.format("%2d", correctRejection.get(idx)) + "\n";
+            }
+            txtPerf.setText(perf);
+            currSta = new int[4];
+        }
+
+        private void updateCurrSta() {
+            String currStaStr = "";
+            currStaStr += "H" + String.format("%2d", currSta[0]) + "  ";
+            currStaStr += "M" + String.format("%2d", currSta[1]) + "  ";
+            currStaStr += "F" + String.format("%2d", currSta[2]) + "  ";
+            currStaStr += "C" + String.format("%2d", currSta[3]);
+            txtCurrSta.setText(currStaStr);
         }
 
         public void updateEvent(int[] event) {
             updateString(evt2Str(event));
-            switch (event[2]){
-                case 3://perf
+            switch (event[2]) {
+                case 50://perf
                     performance.add(event[3]);
                     updatePerf();
                     break;
-                case 4://FA
+                case 47://FA
                     falseAlarm.add(event[3]);
-                    updatePerf();
                     break;
-                case 5://CR
+                case 48://CR
                     correctRejection.add(event[3]);
-                    updatePerf();
                     break;
-                case 6://Miss
+                case 46://Miss
                     miss.add(event[3]);
-                    updatePerf();
                     break;
-                case 7://hit
+                case 45://hit
                     hit.add(event[3]);
-                    updatePerf();
-                    break;    
+                    break;
+                case 4:
+                    currSta[2]++;//false
+                    updateCurrSta();
+                    break;
+                case 5:
+                    currSta[3]++;//reject
+                    updateCurrSta();
+                    break;
+                case 6:
+                    currSta[1]++;//Miss
+                    updateCurrSta();
+                    break;
+                case 7:
+                    currSta[0]++;
+                    updateCurrSta();
+                    break;
             }
         }
 
@@ -270,6 +319,7 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField txtCurrSta;
     private javax.swing.JTextArea txtFileName;
     private javax.swing.JTextArea txtLog;
     private javax.swing.JTextArea txtPerf;

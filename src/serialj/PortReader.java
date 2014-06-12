@@ -19,18 +19,20 @@ public class PortReader {
     private SerialPort serialPort;
     final private DataParser dp;
     final private String portName;
+    private UI.LogUpdator updator;
 
     public PortReader(String s) {
         this.portName = s;
         dp = new DataParser();
     }
 
-    public void setFileToPath(String pathToFile) {
-        dp.setPathToFile(pathToFile);
+    public boolean setFileToPath(String pathToFile) {
+        return dp.setPathToFile(pathToFile);
     }
 
     public void setUpdater(UI.LogUpdator u) {
         dp.setUpdater(u);
+        this.updator = u;
     }
 
     public void start() {
@@ -44,7 +46,7 @@ public class PortReader {
             serialPort.setEventsMask(mask);//Set mask
             serialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener
         } catch (SerialPortException ex) {
-            System.out.println(ex.toString());
+            updator.updateString(ex.toString());
         }
     }
 
@@ -52,9 +54,8 @@ public class PortReader {
         try {
             serialPort.closePort();
         } catch (SerialPortException ex) {
-            System.out.println(ex.toString());
+            updator.updateString(ex.toString());
         }
-
         dp.stop();
     }
 
@@ -68,7 +69,7 @@ public class PortReader {
                     dp.put(bytes);
                 }
             } catch (SerialPortException ex) {
-                System.out.println(ex);
+                updator.updateString(ex.toString());
             }
 
         }

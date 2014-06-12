@@ -41,8 +41,19 @@ public class DataParser implements Runnable {
 
     }
 
-    public void setPathToFile(String pathToFile) {
+    public boolean setPathToFile(String pathToFile) {
         this.pathToFile = pathToFile;
+        File targetFile = new File(pathToFile);
+        if (targetFile.exists()){
+            updater.updateString("File Already Exist!");
+            return false;
+        }
+        File parent = targetFile.getParentFile();
+        if (!parent.exists() && !parent.mkdirs()) {
+            updater.updateString("Cannot Create Directory "+parent);
+            return false;
+        }
+        return true;
     }
 
     public void setUpdater(UI.LogUpdator updater) {
@@ -117,7 +128,7 @@ public class DataParser implements Runnable {
         try {
             q.put(in);
         } catch (InterruptedException ex) {
-            System.out.println(ex.toString());
+            updater.updateString(ex.toString());
         }
     }
 
@@ -144,7 +155,7 @@ public class DataParser implements Runnable {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(targetFile))) {
             out.writeObject(l);
         } catch (IOException e) {
-            System.out.println(e.toString());
+            updater.updateString(e.toString());
         }
     }
 
@@ -152,6 +163,5 @@ public class DataParser implements Runnable {
         stop = true;
         writeList(eventList, this.pathToFile);
     }
-
 
 }
