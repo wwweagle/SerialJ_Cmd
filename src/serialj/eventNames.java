@@ -11,7 +11,7 @@ package serialj;
  */
 public class eventNames {
 
-    final static private String[] trans = new String[255];
+    final static private String[] trans = new String[80];
 
     static public String[] init() {
 
@@ -171,11 +171,6 @@ public class eventNames {
 
         trans[78] = "CorrectRejection4";
         
-        trans[200] = "SpStPerf";
-        trans[201] = "SpStHit";
-        trans[202] = "SpStMiss";
-        trans[203] = "SpStFalseAlarm";
-        trans[204] = "SpStCorrectRejection";
 
         return trans;
 

@@ -7,6 +7,7 @@ package serialj;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import jssc.SerialPortList;
 
 /**
@@ -77,7 +78,7 @@ public class UI extends javax.swing.JFrame {
         txtFileName.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         txtFileName.setLineWrap(true);
         txtFileName.setRows(2);
-        txtFileName.setText("I:\\temp1\\temp2\\temp3.ser");
+        txtFileName.setText("E:\\temp1\\temp2\\temp3.ser");
         jScrollPane2.setViewportView(txtFileName);
 
         txtPerf.setEditable(false);
@@ -198,38 +199,33 @@ public class UI extends javax.swing.JFrame {
     public class LogUpdator {
 
         final private List<String> logList;
-//        private boolean updating;
-        private final List<Integer> performance;
-        private final List<Integer> hit;
-        private final List<Integer> miss;
-        private final List<Integer> falseAlarm;
-        private final List<Integer> correctRejection;
+        ArrayList<int[]> perfHist;
         final private String[] hName;
         private int[] currSta;//
 
         public LogUpdator() {
             logList = new ArrayList<>();
-//            updating = true;
-            performance = new ArrayList<>();
-            hit = new ArrayList<>();
-            miss = new ArrayList<>();
-            falseAlarm = new ArrayList<>();
-            correctRejection = new ArrayList<>();
+            perfHist = new ArrayList<>();
             hName = eventNames.init();
             currSta = new int[4];//Hit,Miss,False,Reject
 
         }
 
         private void updatePerf() {
+            perfHist.add(currSta);
             String perf = "";
-            for (int i = performance.size(); i > 0; i--) {
+            for (int i = perfHist.size(); i > 0; i--) {
                 perf += "S" + String.format("%2d", i) + ",";
                 int idx = i - 1;
-                perf += "P" + String.format("%3d", performance.get(idx)) + ",";
-                perf += "H" + String.format("%2d", hit.get(idx)) + ",";
-                perf += "M" + String.format("%2d", miss.get(idx)) + ",";
-                perf += "F" + String.format("%2d", falseAlarm.get(idx)) + ",";
-                perf += "C" + String.format("%2d", correctRejection.get(idx)) + "\n";
+                int[] histSta = perfHist.get(idx);
+                int performance = (histSta[0] + histSta[3]) * 100
+                        / (histSta[0] + histSta[1] + histSta[2] + histSta[3]);
+
+                perf += "P" + String.format("%3d", performance) + ",";
+                perf += "H" + String.format("%2d", histSta[0]) + ",";
+                perf += "M" + String.format("%2d", histSta[1]) + ",";
+                perf += "F" + String.format("%2d", histSta[2]) + ",";
+                perf += "C" + String.format("%2d", histSta[3]) + "\n";
             }
             txtPerf.setText(perf);
             currSta = new int[4];
@@ -247,21 +243,10 @@ public class UI extends javax.swing.JFrame {
         public void updateEvent(int[] event) {
             updateString(evt2Str(event));
             switch (event[2]) {
-                case 50://perf
-                    performance.add(event[3]);
-                    updatePerf();
-                    break;
-                case 47://FA
-                    falseAlarm.add(event[3]);
-                    break;
-                case 48://CR
-                    correctRejection.add(event[3]);
-                    break;
-                case 46://Miss
-                    miss.add(event[3]);
-                    break;
-                case 45://hit
-                    hit.add(event[3]);
+                case 61:
+                    if (event[3] == 0) {
+                        updatePerf();
+                    }
                     break;
                 case 4:
                     currSta[2]++;//false

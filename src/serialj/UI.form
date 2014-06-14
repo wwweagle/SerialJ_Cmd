@@ -157,7 +157,7 @@
                 <Property name="rows" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="2" type="code"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="I:\u005ctemp1\u005ctemp2\u005ctemp3.ser" containsInvalidXMLChars="true"/>
+                <Property name="text" type="java.lang.String" value="E:\u005ctemp1\u005ctemp2\u005ctemp3.ser" containsInvalidXMLChars="true"/>
               </Properties>
             </Component>
           </SubComponents>
