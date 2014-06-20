@@ -5,9 +5,21 @@
  */
 package serialj;
 
+import java.awt.Desktop;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.logging.FileHandler;
+import java.util.logging.Filter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import javax.imageio.ImageIO;
 import jssc.SerialPortList;
 
 /**
@@ -22,9 +34,25 @@ public class UI extends javax.swing.JFrame {
      * Creates new form UI
      */
     public UI() {
+
+        try {
+            initLogger();
+            this.setIconImage(ImageIO.read(getClass().getResource("/rsrc/icon.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         portNames = SerialPortList.getPortNames();
         u = new LogUpdator();
         initComponents();
+    }
+
+    private void initLogger() throws IOException {
+        Logger rootLogger = Logger.getLogger("");
+        rootLogger.setLevel(Level.FINE);
+        Handler fh = new FileHandler("errors.log", true);
+        fh.setFilter((LogRecord record) -> record.getLevel().intValue() > 700 || record.getMessage().contains("Exception"));
+        fh.setFormatter(new SimpleFormatter());
+        rootLogger.addHandler(fh);
     }
 
     /**
@@ -47,9 +75,10 @@ public class UI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtPerf = new javax.swing.JTextArea();
         txtCurrSta = new javax.swing.JTextField();
+        btnOpen = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("ZX Serial  V1");
+        setTitle(ver);
 
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
 
@@ -78,74 +107,89 @@ public class UI extends javax.swing.JFrame {
         txtFileName.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         txtFileName.setLineWrap(true);
         txtFileName.setRows(2);
-        txtFileName.setText("E:\\temp1\\temp2\\temp3.ser");
-        jScrollPane2.setViewportView(txtFileName);
+        txtFileName.setText("E:\\ZXX\\2014\\June\\");
+            jScrollPane2.setViewportView(txtFileName);
 
-        txtPerf.setEditable(false);
-        txtPerf.setColumns(12);
-        txtPerf.setRows(5);
-        jScrollPane3.setViewportView(txtPerf);
+            txtPerf.setEditable(false);
+            txtPerf.setColumns(12);
+            txtPerf.setRows(5);
+            jScrollPane3.setViewportView(txtPerf);
 
-        txtCurrSta.setEditable(false);
+            txtCurrSta.setEditable(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                            .addComponent(txtCurrSta))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnRecord, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnRecord)
-                            .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
+            btnOpen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+            btnOpen.setText("Open");
+            btnOpen.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnOpenActionPerformed(evt);
+                }
+            });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+            javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                                .addComponent(txtCurrSta))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnOpen))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnRecord, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addContainerGap())
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnRecord)
+                                .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnOpen))))
+                        .addComponent(jScrollPane2))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap())
+            );
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+            getContentPane().setLayout(layout);
+            layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+            layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            );
+
+            pack();
+        }// </editor-fold>//GEN-END:initComponents
 
     private void btnRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecordActionPerformed
         p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
@@ -155,7 +199,9 @@ public class UI extends javax.swing.JFrame {
             btnRecord.setEnabled(false);
             txtFileName.setEditable(false);
             btnStop.setEnabled(true);
-            this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + "ZX Serial V1");
+            String comPort = portNames[cboxCOMList.getSelectedIndex()];
+            this.setTitle(comPort + " " + ver);
+            this.statusFilePath = "E:\\ZXX\\StatusServer\\" + comPort + "Status.txt";
         }
     }//GEN-LAST:event_btnRecordActionPerformed
 
@@ -164,8 +210,21 @@ public class UI extends javax.swing.JFrame {
         btnRecord.setEnabled(true);
         btnStop.setEnabled(false);
         txtFileName.setEditable(true);
-        this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + "ZX Serial V1");
+        this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + ver);
     }//GEN-LAST:event_btnStopActionPerformed
+
+    private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
+        File f = new File(txtFileName.getText());
+        if (f.exists()) {
+            try {
+                Desktop.getDesktop().open(new File(f.getParent()));
+            } catch (IOException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            txtLog.append("File does not exist.");
+        }
+    }//GEN-LAST:event_btnOpenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -212,23 +271,30 @@ public class UI extends javax.swing.JFrame {
         }
 
         private void updatePerf() {
-            perfHist.add(currSta);
-            String perf = "";
-            for (int i = perfHist.size(); i > 0; i--) {
-                perf += "S" + String.format("%2d", i) + ",";
-                int idx = i - 1;
-                int[] histSta = perfHist.get(idx);
-                int performance = (histSta[0] + histSta[3]) * 100
-                        / (histSta[0] + histSta[1] + histSta[2] + histSta[3]);
+            if (currSta[0] + currSta[1] + currSta[2] + currSta[3] != 0) {
+                perfHist.add(currSta);
+                String perf = "";
+                for (int i = perfHist.size(); i > 0; i--) {
+                    perf += "S" + String.format("%2d", i) + ",";
+                    int idx = i - 1;
+                    int[] histSta = perfHist.get(idx);
+                    int performance = (histSta[0] + histSta[3]) * 100
+                            / (histSta[0] + histSta[1] + histSta[2] + histSta[3]);
 
-                perf += "P" + String.format("%3d", performance) + ",";
-                perf += "H" + String.format("%2d", histSta[0]) + ",";
-                perf += "M" + String.format("%2d", histSta[1]) + ",";
-                perf += "F" + String.format("%2d", histSta[2]) + ",";
-                perf += "C" + String.format("%2d", histSta[3]) + "\n";
+                    perf += "P" + String.format("%3d", performance) + ",";
+                    perf += "H" + String.format("%2d", histSta[0]) + ",";
+                    perf += "M" + String.format("%2d", histSta[1]) + ",";
+                    perf += "F" + String.format("%2d", histSta[2]) + ",";
+                    perf += "C" + String.format("%2d", histSta[3]) + "\r\n";
+                }
+                txtPerf.setText(perf);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(statusFilePath))) {
+                    bw.write(perf);
+                } catch (IOException ex) {
+                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                currSta = new int[4];
             }
-            txtPerf.setText(perf);
-            currSta = new int[4];
         }
 
         private void updateCurrSta() {
@@ -245,6 +311,11 @@ public class UI extends javax.swing.JFrame {
             switch (event[2]) {
                 case 61:
                     if (event[3] == 0) {
+                        updatePerf();
+                    }
+                    break;
+                case 1:
+                    if (event[1] == 0 && event[3] == 2 && event[4] == 3) {
                         updatePerf();
                     }
                     break;
@@ -297,6 +368,7 @@ public class UI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnRecord;
     private javax.swing.JButton btnStop;
     private javax.swing.JComboBox cboxCOMList;
@@ -312,4 +384,6 @@ public class UI extends javax.swing.JFrame {
 
     final private LogUpdator u;
     private PortReader p;
+    private String statusFilePath;
+    final private String ver = "ZX Serial 1.11";
 }

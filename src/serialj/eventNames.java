@@ -170,7 +170,8 @@ public class eventNames {
         trans[77] = "FalseAlarm4";
 
         trans[78] = "CorrectRejection4";
-        
+
+        trans[79] = "LaserSwitch";
 
         return trans;
 
