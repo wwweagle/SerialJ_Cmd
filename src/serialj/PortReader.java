@@ -35,18 +35,21 @@ public class PortReader {
         this.updator = u;
     }
 
-    public void start() {
+    public boolean start() {
 
         (new Thread(dp, "data")).start();
         try {
             serialPort = new SerialPort(portName);
             serialPort.openPort();//Open port
-            serialPort.setParams(9600, 8, 1, 0);//Set params
+//            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+            serialPort.setParams(SerialPort.BAUDRATE_9600, 8, 1, 0);//Set params
             int mask = SerialPort.MASK_RXCHAR;//Prepare mask
             serialPort.setEventsMask(mask);//Set mask
             serialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener
+            return true;
         } catch (SerialPortException ex) {
             updator.updateString(ex.toString());
+            return false;
         }
     }
 

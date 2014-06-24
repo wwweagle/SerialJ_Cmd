@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.FileHandler;
-import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -143,7 +141,7 @@ public class UI extends javax.swing.JFrame {
                                 .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnOpen))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(btnRecord, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -194,14 +192,13 @@ public class UI extends javax.swing.JFrame {
     private void btnRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecordActionPerformed
         p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
         p.setUpdater(u);
-        if (p.setFileToPath(txtFileName.getText())) {
-            p.start();
+        if (p.setFileToPath(txtFileName.getText()) && p.start()) {
             btnRecord.setEnabled(false);
             txtFileName.setEditable(false);
             btnStop.setEnabled(true);
             String comPort = portNames[cboxCOMList.getSelectedIndex()];
             this.setTitle(comPort + " " + ver);
-            this.statusFilePath = "E:\\ZXX\\StatusServer\\" + comPort + "Status.txt";
+            this.statusFilePath = statusFileParent + comPort + "Status.txt";
         }
     }//GEN-LAST:event_btnRecordActionPerformed
 
@@ -222,7 +219,7 @@ public class UI extends javax.swing.JFrame {
                 Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            txtLog.append("File does not exist.");
+            txtLog.append("File does not exist.\r\n");
         }
     }//GEN-LAST:event_btnOpenActionPerformed
 
@@ -257,16 +254,25 @@ public class UI extends javax.swing.JFrame {
 
     public class LogUpdator {
 
-        final private List<String> logList;
-        ArrayList<int[]> perfHist;
+//        final private List<String> logList;
+        final private String[] logs;
+        final private ArrayList<int[]> perfHist;
         final private String[] hName;
+        final private boolean update;
         private int[] currSta;//
+        private int logIdx;
 
         public LogUpdator() {
-            logList = new ArrayList<>();
+//            logList = new ArrayList<>();
+            logs = new String[20];
+            for (int i = 0; i < 20; i++) {
+                logs[i] = "";
+            }
+            logIdx = 0;
             perfHist = new ArrayList<>();
             hName = eventNames.init();
             currSta = new int[4];//Hit,Miss,False,Reject
+            update = (new File(statusFileParent)).exists();
 
         }
 
@@ -288,10 +294,12 @@ public class UI extends javax.swing.JFrame {
                     perf += "C" + String.format("%2d", histSta[3]) + "\r\n";
                 }
                 txtPerf.setText(perf);
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(statusFilePath))) {
-                    bw.write(perf);
-                } catch (IOException ex) {
-                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                if (update) {
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(statusFilePath))) {
+                        bw.write(perf);
+                    } catch (IOException ex) {
+                        Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 currSta = new int[4];
             }
@@ -339,17 +347,15 @@ public class UI extends javax.swing.JFrame {
         }
 
         public void updateString(String str) {
-            logList.add(str);
-            if (logList.size() > 20) {
-                for (int i = 0; i < logList.size() - 20; i++) {
-                    logList.remove(0);
-                }
-            }
+            logs[logIdx] = str;
             String status = "";
-            for (int idx = logList.size(); idx > 0; idx--) {
-                status = status + logList.get(idx - 1) + "\r\n";
+            int updateIdx = logIdx;
+            for (int count = 0; count < 20; count++) {
+                status += logs[updateIdx] + "\r\n";
+                updateIdx = updateIdx > 0 ? updateIdx - 1 : 19;
             }
             txtLog.setText(status);
+            logIdx = logIdx < 19 ? logIdx + 1 : 0;
         }
 
         private String evt2Str(int[] evt) {
@@ -358,8 +364,10 @@ public class UI extends javax.swing.JFrame {
                     return Integer.toString(evt[0]) + "," + hName[evt[2]] + "," + Integer.toString(evt[3]);
                 case 0x00:
                     if (evt[2] == 0x01 && evt[3] == 0x02 && evt[4] == 0x03) {
-                        return Integer.toString(evt[0]) + "," + "Manual Reset";
+                        return Integer.toString(evt[0]) + ", Manual Reset";
                     }
+                case 0xff:
+                    return Integer.toString(evt[0]) + ", Communication Error";
                 default:
                     return "unknown";
             }
@@ -385,5 +393,6 @@ public class UI extends javax.swing.JFrame {
     final private LogUpdator u;
     private PortReader p;
     private String statusFilePath;
-    final private String ver = "ZX Serial 1.11";
+    final private String ver = "ZX Serial 1.12";
+    final private String statusFileParent = "E:\\ZXX\\StatusServer\\";
 }
