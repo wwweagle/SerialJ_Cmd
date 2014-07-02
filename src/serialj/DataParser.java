@@ -44,13 +44,13 @@ public class DataParser implements Runnable {
     public boolean setPathToFile(String pathToFile) {
         this.pathToFile = pathToFile;
         File targetFile = new File(pathToFile);
-        if (targetFile.exists()){
+        if (targetFile.exists()) {
             updater.updateString("File Already Exist!");
             return false;
         }
         File parent = targetFile.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
-            updater.updateString("Cannot Create Directory "+parent);
+            updater.updateString("Cannot Create Directory " + parent);
             return false;
         }
         return true;
