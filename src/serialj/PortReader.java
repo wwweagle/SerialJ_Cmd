@@ -48,7 +48,7 @@ public class PortReader {
             serialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener
             return true;
         } catch (SerialPortException ex) {
-            updator.updateString(ex.toString());
+            updator.updateString(ex.toString() + "\r\n");
             return false;
         }
     }
@@ -57,7 +57,7 @@ public class PortReader {
         try {
             serialPort.closePort();
         } catch (SerialPortException ex) {
-            updator.updateString(ex.toString());
+            updator.updateString(ex.toString() + "\r\n");
         }
         dp.stop();
     }
@@ -72,7 +72,7 @@ public class PortReader {
                     dp.put(bytes);
                 }
             } catch (SerialPortException ex) {
-                updator.updateString(ex.toString());
+                updator.updateString(ex.toString() + "\r\n");
             }
 
         }

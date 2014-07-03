@@ -363,7 +363,7 @@ public class UI extends javax.swing.JFrame {
                 status += logs[updateIdx] + "\r\n";
                 updateIdx = updateIdx > 0 ? updateIdx - 1 : 19;
             }
-            txtLog.setText(status);
+            txtLog.setText(status.trim());
             logIdx = logIdx < 19 ? logIdx + 1 : 0;
         }
 
@@ -404,5 +404,5 @@ public class UI extends javax.swing.JFrame {
     private String statusFilePath;
     final private String ver = "ZX Serial 1.13";
     private String statusFileParent = "E:\\ZXX\\StatusServer\\";
-    private String savePath="E:\\ZXX\\2014\\June\\";
+    private String savePath = "E:\\ZXX\\2014\\";
 }

@@ -21,7 +21,6 @@ public class FileLib {
         String pathToFile = DataParser.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         try {
             pathToFile = URLDecoder.decode(pathToFile, "UTF-8");
-//            pathToFile = (new File(pathToFile)).getParentFile().getCanonicalPath() + "\\" + "SerialJ.ini";
             pathToFile = (new File(pathToFile)).getParentFile().getCanonicalPath() + "\\" + "serialJ.ini";
             System.out.println(pathToFile);
         } catch (IOException ex) {
