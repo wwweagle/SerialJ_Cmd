@@ -17,7 +17,7 @@ public class eventNames {
 
         trans[0] = "Lick";
 
-        trans[1] = "Come";
+        trans[1] = "Keypad";
 
         trans[2] = "Lick2";
 
