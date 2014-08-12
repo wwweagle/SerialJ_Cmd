@@ -27,12 +27,12 @@ import jssc.SerialPortList;
  * @author Xiaoxing
  */
 public class UI extends javax.swing.JFrame {
-    
+
     final private String[] portNames;
     private LogUpdator u;
     private PortReader p;
     private String statusFilePath;
-    final private String ver = "ZX Serial 1.20";
+    final private String ver = "ZX Serial 1.22b";
     private String statusFileParent = "E:\\ZXX\\StatusServer\\";
     private String savePath = "E:\\ZXX\\2014\\";
     final private String[] expLists;
@@ -41,7 +41,7 @@ public class UI extends javax.swing.JFrame {
      * Creates new form UI
      */
     public UI() {
-        
+
         try {
             initLogger();
             this.setIconImage(ImageIO.read(getClass().getResource("/rsrc/icon.png")));
@@ -62,7 +62,7 @@ public class UI extends javax.swing.JFrame {
         expLists = flib.getExperimentConditions();
         initComponents();
     }
-    
+
     private void initLogger() throws IOException {
         Logger rootLogger = Logger.getLogger("");
         rootLogger.setLevel(Level.FINE);
@@ -94,8 +94,9 @@ public class UI extends javax.swing.JFrame {
         txtCurrSta = new javax.swing.JTextField();
         btnOpen = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        cboxExpList = new javax.swing.JComboBox();
         btnDate = new javax.swing.JButton();
+        btnType = new javax.swing.JButton();
+        btnSlash = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(ver);
@@ -105,6 +106,7 @@ public class UI extends javax.swing.JFrame {
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
 
         btnRecord.setText("|>");
+        btnRecord.setPreferredSize(new java.awt.Dimension(45, 20));
         btnRecord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRecordActionPerformed(evt);
@@ -113,7 +115,9 @@ public class UI extends javax.swing.JFrame {
 
         btnStop.setText("[]");
         btnStop.setEnabled(false);
-        btnStop.setPreferredSize(new java.awt.Dimension(45, 23));
+        btnStop.setMaximumSize(new java.awt.Dimension(45, 23));
+        btnStop.setMinimumSize(new java.awt.Dimension(45, 23));
+        btnStop.setPreferredSize(new java.awt.Dimension(45, 20));
         btnStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStopActionPerformed(evt);
@@ -140,6 +144,9 @@ public class UI extends javax.swing.JFrame {
         txtCurrSta.setEditable(false);
 
         btnOpen.setText("Open");
+        btnOpen.setMaximumSize(new java.awt.Dimension(70, 23));
+        btnOpen.setMinimumSize(new java.awt.Dimension(70, 23));
+        btnOpen.setPreferredSize(new java.awt.Dimension(66, 20));
         btnOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenActionPerformed(evt);
@@ -148,16 +155,12 @@ public class UI extends javax.swing.JFrame {
 
         btnClear.setText("Clear");
         btnClear.setEnabled(false);
+        btnClear.setMaximumSize(new java.awt.Dimension(70, 23));
+        btnClear.setMinimumSize(new java.awt.Dimension(70, 23));
+        btnClear.setPreferredSize(new java.awt.Dimension(66, 20));
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearActionPerformed(evt);
-            }
-        });
-
-        cboxExpList.setModel(new javax.swing.DefaultComboBoxModel(expLists));
-        cboxExpList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboxExpListActionPerformed(evt);
             }
         });
 
@@ -168,78 +171,97 @@ public class UI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                            .addComponent(txtCurrSta))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        btnType.setText("Type");
+        btnType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTypeActionPerformed(evt);
+            }
+        });
+
+        btnSlash.setText("\\");
+            btnSlash.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btnSlashActionPerformed(evt);
+                }
+            });
+
+            javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+            jPanel1.setLayout(jPanel1Layout);
+            jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnRecord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnOpen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnDate, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnSlash)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnType)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane3)
+                                .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap())
+            );
+            jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnClear, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnOpen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRecord, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboxCOMList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnType, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnSlash, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnDate, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jScrollPane1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnRecord)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnClear))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnDate, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cboxExpList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 27, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRecord)
-                    .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOpen)
-                    .addComponent(btnClear))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboxExpList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDate))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCurrSta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
+                    .addGap(4, 4, 4))
+            );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+            getContentPane().setLayout(layout);
+            layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, Short.MAX_VALUE)
+            );
+            layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                    .addGap(0, 0, 0))
+            );
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+            pack();
+        }// </editor-fold>//GEN-END:initComponents
 
     private void btnRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecordActionPerformed
         p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
@@ -249,6 +271,9 @@ public class UI extends javax.swing.JFrame {
             txtFileName.setEditable(false);
             btnStop.setEnabled(true);
             btnClear.setEnabled(false);
+            btnDate.setEnabled(false);
+            btnType.setEnabled(false);
+            btnSlash.setEnabled(false);
             String comPort = portNames[cboxCOMList.getSelectedIndex()];
             this.setTitle(comPort + " " + ver);
             this.statusFilePath = statusFileParent + comPort + "Status.txt";
@@ -259,8 +284,11 @@ public class UI extends javax.swing.JFrame {
         p.stop();
         btnRecord.setEnabled(true);
         btnStop.setEnabled(false);
+        btnDate.setEnabled(true);
+        btnType.setEnabled(true);
         btnClear.setEnabled(true);
         txtFileName.setEditable(true);
+        btnSlash.setEnabled(true);
         this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + ver);
     }//GEN-LAST:event_btnStopActionPerformed
 
@@ -291,9 +319,13 @@ public class UI extends javax.swing.JFrame {
         txtFileName.append(fmt.format(new Date()));
     }//GEN-LAST:event_btnDateActionPerformed
 
-    private void cboxExpListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxExpListActionPerformed
-        txtFileName.append(expLists[cboxExpList.getSelectedIndex()]);
-    }//GEN-LAST:event_cboxExpListActionPerformed
+    private void btnTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTypeActionPerformed
+        (new ExperimentsForm(expLists,txtFileName)).setVisible(true);
+    }//GEN-LAST:event_btnTypeActionPerformed
+
+    private void btnSlashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSlashActionPerformed
+        txtFileName.append("\\");
+    }//GEN-LAST:event_btnSlashActionPerformed
 
     /**
      * @param args the command line arguments
@@ -321,7 +353,7 @@ public class UI extends javax.swing.JFrame {
             new UI().setVisible(true);
         });
     }
-    
+
     public class LogUpdator {
 
 //        final private List<String> logList;
@@ -331,7 +363,7 @@ public class UI extends javax.swing.JFrame {
         final private boolean update;
         private int[] currSta;//
         private int logIdx;
-        
+
         public LogUpdator() {
 //            logList = new ArrayList<>();
             logs = new String[20];
@@ -343,9 +375,9 @@ public class UI extends javax.swing.JFrame {
             hName = eventNames.init();
             currSta = new int[4];//Hit,Miss,False,Reject
             update = (new File(statusFileParent)).exists();
-            
+
         }
-        
+
         private void updatePerf() {
             if (currSta[0] + currSta[1] + currSta[2] + currSta[3] != 0) {
                 perfHist.add(currSta);
@@ -356,7 +388,7 @@ public class UI extends javax.swing.JFrame {
                     int[] histSta = perfHist.get(idx);
                     int performance = (histSta[0] + histSta[3]) * 100
                             / (histSta[0] + histSta[1] + histSta[2] + histSta[3]);
-                    
+
                     perf += "P" + String.format("%3d", performance) + ",";
                     perf += "H" + String.format("%2d", histSta[0]) + ",";
                     perf += "M" + String.format("%2d", histSta[1]) + ",";
@@ -374,7 +406,7 @@ public class UI extends javax.swing.JFrame {
                 currSta = new int[4];
             }
         }
-        
+
         private void updateCurrSta() {
             String currStaStr = "";
             currStaStr += "H" + String.format("%2d", currSta[0]) + "  ";
@@ -383,7 +415,7 @@ public class UI extends javax.swing.JFrame {
             currStaStr += "C" + String.format("%2d", currSta[3]);
             txtCurrSta.setText(currStaStr);
         }
-        
+
         public void updateEvent(int[] event) {
             updateString(evt2Str(event));
             switch (event[2]) {
@@ -415,7 +447,7 @@ public class UI extends javax.swing.JFrame {
                     break;
             }
         }
-        
+
         public void updateString(String str) {
             logs[logIdx] = str;
             String status = "";
@@ -427,7 +459,7 @@ public class UI extends javax.swing.JFrame {
             txtLog.setText(status.trim());
             logIdx = logIdx < 19 ? logIdx + 1 : 0;
         }
-        
+
         private String evt2Str(int[] evt) {
             switch (evt[1]) {
                 case 0x55:
@@ -450,9 +482,10 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JButton btnDate;
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnRecord;
+    private javax.swing.JButton btnSlash;
     private javax.swing.JButton btnStop;
+    private javax.swing.JButton btnType;
     private javax.swing.JComboBox cboxCOMList;
-    private javax.swing.JComboBox cboxExpList;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
