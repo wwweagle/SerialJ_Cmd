@@ -14,52 +14,51 @@ import jssc.SerialPortException;
  *
  * @author Xiaoxing
  */
-public class PortReader {
+public class PortReader implements PortInterface {
 
-    private SerialPort serialPort;
-    final private DataParser dp;
+    final private SerialPort serialPort;
     final private String portName;
     private UI.LogUpdator updator;
+    private DataParser dp;
 
     public PortReader(String s) {
         this.portName = s;
-        dp = new DataParser();
+        serialPort = new SerialPort(s);
     }
 
-    public void setUpdater(UI.LogUpdator u) {
-        dp.setUpdater(u);
-        this.updator = u;
-    }
-
-    public boolean start() {
-
-        (new Thread(dp, "data")).start();
+    @Override
+    public boolean start(UI.LogUpdator u) {
         try {
-            serialPort = new SerialPort(portName);
+            this.updator = u;
             serialPort.openPort();//Open port
-//            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+            dp = new DataParser();
+            dp.setUpdater(u);
+            (new Thread(dp, "data")).start();
             serialPort.setParams(SerialPort.BAUDRATE_9600, 8, 1, 0);//Set params
             int mask = SerialPort.MASK_RXCHAR;//Prepare mask
             serialPort.setEventsMask(mask);//Set mask
             serialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener
             return true;
+
         } catch (SerialPortException ex) {
             updator.updateString(ex.toString() + "\r\n");
             return false;
         }
     }
 
+    @Override
     public void stop() {
-        if (serialPort.isOpened()) {
-            try {
+        try {
+            if (serialPort.isOpened()) {
                 serialPort.closePort();
                 dp.stop();
-            } catch (SerialPortException ex) {
-                updator.updateString(ex.toString() + "\r\n");
             }
+        } catch (SerialPortException ex) {
+            updator.updateString(ex.toString() + "\r\n");
         }
     }
 
+    @Override
     public boolean writeByte(byte b) {
         try {
             return serialPort.writeByte(b);

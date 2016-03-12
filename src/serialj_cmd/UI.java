@@ -6,6 +6,8 @@
 package serialj_cmd;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -20,8 +22,8 @@ public class UI extends javax.swing.JFrame {
 
     final private String[] portNames;
     private LogUpdator u;
-    private PortReader p;
-    final private String ver = "ZX Serial 1.51 @" + getPID();
+    private PortInterface p;
+    final private String ver = "ZX Serial 1.8 @" + getPID();
 
     /**
      * Creates new form UI
@@ -29,7 +31,9 @@ public class UI extends javax.swing.JFrame {
     public UI() {
 
         try {
-            this.setIconImage(ImageIO.read(getClass().getResource("/rsrc/icon.png")));
+            URL iconUrl = getClass().getResource("/rsrc/icon.png");
+            System.out.println(iconUrl.toString());
+            this.setIconImage(ImageIO.read(iconUrl));
         } catch (IOException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -46,6 +50,7 @@ public class UI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         MainPanel = new javax.swing.JPanel();
         cboxCOMList = new javax.swing.JComboBox();
@@ -62,24 +67,54 @@ public class UI extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton0 = new javax.swing.JButton();
+        btnBatch = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(ver);
+        setPreferredSize(new java.awt.Dimension(300, 336));
 
-        MainPanel.setPreferredSize(new java.awt.Dimension(335, 310));
+        MainPanel.setPreferredSize(new java.awt.Dimension(300, 300));
+        MainPanel.setLayout(new java.awt.GridBagLayout());
 
+        cboxCOMList.setFont(cboxCOMList.getFont());
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
         cboxCOMList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboxCOMListActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(cboxCOMList, gridBagConstraints);
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(100, 100));
 
         txtLog.setEditable(false);
         txtLog.setColumns(12);
+        txtLog.setLineWrap(true);
         txtLog.setRows(5);
+        txtLog.setBorder(null);
+        txtLog.setMaximumSize(new java.awt.Dimension(200, 200));
+        txtLog.setPreferredSize(null);
         jScrollPane1.setViewportView(txtLog);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 2;
+        gridBagConstraints.ipady = 2;
+        gridBagConstraints.weighty = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        MainPanel.add(jScrollPane1, gridBagConstraints);
+
+        jButton1.setFont(jButton1.getFont());
         jButton1.setText("1");
         jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -87,7 +122,16 @@ public class UI extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton1, gridBagConstraints);
 
+        jButton2.setFont(jButton2.getFont());
         jButton2.setText("2");
         jButton2.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -95,7 +139,16 @@ public class UI extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton2, gridBagConstraints);
 
+        jButton3.setFont(jButton3.getFont());
         jButton3.setText("3");
         jButton3.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -103,7 +156,16 @@ public class UI extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton3, gridBagConstraints);
 
+        jButton4.setFont(jButton4.getFont());
         jButton4.setText("4");
         jButton4.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +173,16 @@ public class UI extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton4, gridBagConstraints);
 
+        jButton5.setFont(jButton5.getFont());
         jButton5.setText("5");
         jButton5.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +190,16 @@ public class UI extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton5, gridBagConstraints);
 
+        jButtonReset.setFont(jButtonReset.getFont());
         jButtonReset.setText("RESET");
         jButtonReset.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
@@ -127,7 +207,16 @@ public class UI extends javax.swing.JFrame {
                 jButtonResetActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButtonReset, gridBagConstraints);
 
+        jButton6.setFont(jButton6.getFont());
         jButton6.setText("6");
         jButton6.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -135,7 +224,16 @@ public class UI extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton6, gridBagConstraints);
 
+        jButton7.setFont(jButton7.getFont());
         jButton7.setText("7");
         jButton7.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -143,7 +241,16 @@ public class UI extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton7, gridBagConstraints);
 
+        jButton8.setFont(jButton8.getFont());
         jButton8.setText("8");
         jButton8.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton8.addActionListener(new java.awt.event.ActionListener() {
@@ -151,7 +258,16 @@ public class UI extends javax.swing.JFrame {
                 jButton8ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton8, gridBagConstraints);
 
+        jButton9.setFont(jButton9.getFont());
         jButton9.setText("9");
         jButton9.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -159,7 +275,16 @@ public class UI extends javax.swing.JFrame {
                 jButton9ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton9, gridBagConstraints);
 
+        jButton0.setFont(jButton0.getFont());
         jButton0.setText("0");
         jButton0.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButton0.addActionListener(new java.awt.event.ActionListener() {
@@ -167,74 +292,42 @@ public class UI extends javax.swing.JFrame {
                 jButton0ActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(jButton0, gridBagConstraints);
 
-        javax.swing.GroupLayout MainPanelLayout = new javax.swing.GroupLayout(MainPanel);
-        MainPanel.setLayout(MainPanelLayout);
-        MainPanelLayout.setHorizontalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
-            .addGroup(MainPanelLayout.createSequentialGroup()
-                .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(MainPanelLayout.createSequentialGroup()
-                        .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5))
-                    .addGroup(MainPanelLayout.createSequentialGroup()
-                        .addComponent(jButtonReset)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton0)))
-                .addContainerGap())
-        );
-        MainPanelLayout.setVerticalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MainPanelLayout.createSequentialGroup()
-                .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cboxCOMList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(jButton1)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)
-                        .addComponent(jButton4)
-                        .addComponent(jButton5)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonReset)
-                    .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(jButton6)
-                        .addComponent(jButton7)
-                        .addComponent(jButton8)
-                        .addComponent(jButton9)
-                        .addComponent(jButton0)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
-        );
+        btnBatch.setFont(btnBatch.getFont());
+        btnBatch.setText("Batch");
+        btnBatch.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnBatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatchActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(btnBatch, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+            .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -259,8 +352,7 @@ public class UI extends javax.swing.JFrame {
 //        this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + ver);
 
         p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
-        p.setUpdater(u);
-        if (p.start()) {
+        if (p.start(u)) {
             String comPort = portNames[cboxCOMList.getSelectedIndex()];
             this.setTitle(comPort + " " + ver);
         }
@@ -311,6 +403,29 @@ public class UI extends javax.swing.JFrame {
         p.writeByte((byte) 0x30);
     }//GEN-LAST:event_jButton0ActionPerformed
 
+    private void btnBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatchActionPerformed
+        if (cboxCOMList.getItemCount() > 0) {
+            if (btnBatch.isSelected()) {
+                if (p != null) {
+                    p.stop();
+                }
+                cboxCOMList.setEnabled(false);
+                p = new PortReaderArray(portNames);
+                if (!p.start(u)) {
+                    u.updateString("Error: One or more serial port failed to start!\r\n");
+                }
+            } else {
+                p.stop();
+                cboxCOMList.setEnabled(true);
+                p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
+                if (p.start(u)) {
+                    String comPort = portNames[cboxCOMList.getSelectedIndex()];
+                    this.setTitle(comPort + " " + ver);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnBatchActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -345,22 +460,31 @@ public class UI extends javax.swing.JFrame {
 
         public LogUpdator() {
             logTxt = new StringBuilder();
-            logTxt.ensureCapacity(500);
+            logTxt.ensureCapacity(1000);
             hName = eventNames.init();
         }
 
-        public void updateEvent(int[] event) {
+        synchronized public void updateEvent(int[] event) {
             updateString(evt2Str(event));
         }
 
-        public void updateString(String str) {
+        synchronized public void updateString(String str) {
             logTxt.append(str).append("\r\n");
             while (logTxt.length() > 500) {
                 logTxt.delete(0, logTxt.indexOf("\r\n") + 2);
             }
-            SwingUtilities.invokeLater(() -> {
-                txtLog.setText(logTxt.toString());
-            });
+            final String s = logTxt.toString();
+            try {
+                if (SwingUtilities.isEventDispatchThread()) {
+                    txtLog.setText(s);
+                } else {
+                    SwingUtilities.invokeAndWait(() -> {
+                        txtLog.setText(s);
+                    });
+                }
+            } catch (InterruptedException | InvocationTargetException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         private String evt2Str(int[] evt) {
@@ -385,9 +509,18 @@ public class UI extends javax.swing.JFrame {
         return Long.parseLong(processName.split("@")[0]);
     }
 
+    class PortManager {
+
+        boolean batch;
+        PortReader currentPort;
+        PortReader[] allPorts;
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
+    private javax.swing.JToggleButton btnBatch;
     private javax.swing.JComboBox cboxCOMList;
     private javax.swing.JButton jButton0;
     private javax.swing.JButton jButton1;
