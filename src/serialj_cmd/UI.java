@@ -68,9 +68,11 @@ public class UI extends javax.swing.JFrame {
         jButton9 = new javax.swing.JButton();
         jButton0 = new javax.swing.JButton();
         btnBatch = new javax.swing.JToggleButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(ver);
+        setMaximumSize(new java.awt.Dimension(512, 2147483647));
         setPreferredSize(new java.awt.Dimension(300, 336));
 
         MainPanel.setPreferredSize(new java.awt.Dimension(300, 300));
@@ -78,6 +80,8 @@ public class UI extends javax.swing.JFrame {
 
         cboxCOMList.setFont(cboxCOMList.getFont());
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
+        cboxCOMList.setMinimumSize(new java.awt.Dimension(55, 24));
+        cboxCOMList.setPreferredSize(new java.awt.Dimension(55, 24));
         cboxCOMList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboxCOMListActionPerformed(evt);
@@ -87,8 +91,7 @@ public class UI extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.04;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(cboxCOMList, gridBagConstraints);
 
@@ -106,7 +109,7 @@ public class UI extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.gridwidth = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 2;
         gridBagConstraints.ipady = 2;
@@ -117,91 +120,104 @@ public class UI extends javax.swing.JFrame {
         jButton1.setFont(jButton1.getFont());
         jButton1.setText("1");
         jButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton1.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton1.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton1.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton1, gridBagConstraints);
 
         jButton2.setFont(jButton2.getFont());
         jButton2.setText("2");
         jButton2.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton2.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton2.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton2.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton2, gridBagConstraints);
 
         jButton3.setFont(jButton3.getFont());
         jButton3.setText("3");
         jButton3.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton3.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton3.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton3.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton3, gridBagConstraints);
 
         jButton4.setFont(jButton4.getFont());
         jButton4.setText("4");
         jButton4.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton4.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton4.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton4.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton4, gridBagConstraints);
 
         jButton5.setFont(jButton5.getFont());
         jButton5.setText("5");
         jButton5.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton5.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton5.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton5.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton5, gridBagConstraints);
 
         jButtonReset.setFont(jButtonReset.getFont());
         jButtonReset.setText("RESET");
         jButtonReset.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButtonReset.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButtonReset.setMinimumSize(new java.awt.Dimension(55, 24));
+        jButtonReset.setPreferredSize(new java.awt.Dimension(55, 24));
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
@@ -211,99 +227,111 @@ public class UI extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.04;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButtonReset, gridBagConstraints);
 
         jButton6.setFont(jButton6.getFont());
         jButton6.setText("6");
         jButton6.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton6.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton6.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton6.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton6, gridBagConstraints);
 
         jButton7.setFont(jButton7.getFont());
         jButton7.setText("7");
         jButton7.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton7.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton7.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton7.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton7, gridBagConstraints);
 
         jButton8.setFont(jButton8.getFont());
         jButton8.setText("8");
         jButton8.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton8.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton8.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton8.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton8, gridBagConstraints);
 
         jButton9.setFont(jButton9.getFont());
         jButton9.setText("9");
         jButton9.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton9.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton9.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton9.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton9, gridBagConstraints);
 
         jButton0.setFont(jButton0.getFont());
         jButton0.setText("0");
         jButton0.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButton0.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        jButton0.setMinimumSize(new java.awt.Dimension(20, 24));
+        jButton0.setPreferredSize(new java.awt.Dimension(20, 24));
         jButton0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton0ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.02;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(jButton0, gridBagConstraints);
 
         btnBatch.setFont(btnBatch.getFont());
         btnBatch.setText("Batch");
         btnBatch.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnBatch.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        btnBatch.setMinimumSize(new java.awt.Dimension(55, 24));
+        btnBatch.setPreferredSize(new java.awt.Dimension(55, 24));
         btnBatch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBatchActionPerformed(evt);
@@ -313,10 +341,14 @@ public class UI extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.04;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         MainPanel.add(btnBatch, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        MainPanel.add(jLabel1, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -533,6 +565,7 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JButton jButtonReset;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txtLog;
     // End of variables declaration//GEN-END:variables
