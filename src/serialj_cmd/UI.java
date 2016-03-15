@@ -5,12 +5,14 @@
  */
 package serialj_cmd;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import jssc.SerialPortList;
 
@@ -23,6 +25,7 @@ public class UI extends javax.swing.JFrame {
     final private String[] portNames;
     private LogUpdator u;
     private PortInterface p;
+    private ScriptExecutor se;
     final private String ver = "ZX Serial 1.8 @" + getPID();
 
     /**
@@ -69,6 +72,7 @@ public class UI extends javax.swing.JFrame {
         jButton0 = new javax.swing.JButton();
         btnBatch = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
+        btnScript = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(ver);
@@ -80,8 +84,8 @@ public class UI extends javax.swing.JFrame {
 
         cboxCOMList.setFont(cboxCOMList.getFont());
         cboxCOMList.setModel(new javax.swing.DefaultComboBoxModel(portNames));
-        cboxCOMList.setMinimumSize(new java.awt.Dimension(55, 24));
-        cboxCOMList.setPreferredSize(new java.awt.Dimension(55, 24));
+        cboxCOMList.setMinimumSize(new java.awt.Dimension(70, 24));
+        cboxCOMList.setPreferredSize(new java.awt.Dimension(70, 24));
         cboxCOMList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboxCOMListActionPerformed(evt);
@@ -216,8 +220,8 @@ public class UI extends javax.swing.JFrame {
         jButtonReset.setText("RESET");
         jButtonReset.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonReset.setMaximumSize(new java.awt.Dimension(32767, 32767));
-        jButtonReset.setMinimumSize(new java.awt.Dimension(55, 24));
-        jButtonReset.setPreferredSize(new java.awt.Dimension(55, 24));
+        jButtonReset.setMinimumSize(new java.awt.Dimension(70, 24));
+        jButtonReset.setPreferredSize(new java.awt.Dimension(70, 24));
         jButtonReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
@@ -350,6 +354,24 @@ public class UI extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         MainPanel.add(jLabel1, gridBagConstraints);
 
+        btnScript.setText("Script");
+        btnScript.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnScript.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        btnScript.setMinimumSize(new java.awt.Dimension(55, 24));
+        btnScript.setPreferredSize(new java.awt.Dimension(55, 24));
+        btnScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnScriptActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.04;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        MainPanel.add(btnScript, gridBagConstraints);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -383,7 +405,7 @@ public class UI extends javax.swing.JFrame {
 //        jButtonReset.setEnabled(false);
 //        this.setTitle(portNames[cboxCOMList.getSelectedIndex()] + " " + ver);
 
-        p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
+        p = new PortAccessor(portNames[cboxCOMList.getSelectedIndex()]);
         if (p.start(u)) {
             String comPort = portNames[cboxCOMList.getSelectedIndex()];
             this.setTitle(comPort + " " + ver);
@@ -442,14 +464,14 @@ public class UI extends javax.swing.JFrame {
                     p.stop();
                 }
                 cboxCOMList.setEnabled(false);
-                p = new PortReaderArray(portNames);
+                p = new PortAccessorArray(portNames);
                 if (!p.start(u)) {
                     u.updateString("Error: One or more serial port failed to start!\r\n");
                 }
             } else {
                 p.stop();
                 cboxCOMList.setEnabled(true);
-                p = new PortReader(portNames[cboxCOMList.getSelectedIndex()]);
+                p = new PortAccessor(portNames[cboxCOMList.getSelectedIndex()]);
                 if (p.start(u)) {
                     String comPort = portNames[cboxCOMList.getSelectedIndex()];
                     this.setTitle(comPort + " " + ver);
@@ -457,6 +479,41 @@ public class UI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnBatchActionPerformed
+
+    private void btnScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScriptActionPerformed
+        if (btnScript.isSelected()) {
+            JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory((new File(".")));
+            fc.setFileFilter(new javax.swing.filechooser.FileFilter() {
+
+                @Override
+                public String getDescription() {
+                    return "Script Files (.txt)";
+                }
+
+                @Override
+                public boolean accept(File f) {
+                    if (f.isDirectory() || f.getAbsolutePath().endsWith(".txt")) {
+                        return true;
+                    }
+                    return false;
+                }
+
+            });
+            int result = fc.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File f = fc.getSelectedFile();
+                u.updateString("Running Script " + f.getName());
+                se = new ScriptExecutor(f, p);
+                (new Thread(se)).start();
+            }
+        } else {
+            if (null != se) {
+                se.stop();
+            }
+            u.updateString("Script stopped");
+        }
+    }//GEN-LAST:event_btnScriptActionPerformed
 
     /**
      * @param args the command line arguments
@@ -544,8 +601,8 @@ public class UI extends javax.swing.JFrame {
     class PortManager {
 
         boolean batch;
-        PortReader currentPort;
-        PortReader[] allPorts;
+        PortAccessor currentPort;
+        PortAccessor[] allPorts;
 
     }
 
@@ -553,6 +610,7 @@ public class UI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
     private javax.swing.JToggleButton btnBatch;
+    private javax.swing.JToggleButton btnScript;
     private javax.swing.JComboBox cboxCOMList;
     private javax.swing.JButton jButton0;
     private javax.swing.JButton jButton1;

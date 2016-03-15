@@ -11,34 +11,34 @@ import java.util.ArrayList;
  *
  * @author Libra
  */
-public class PortReaderArray implements PortInterface {
+public class PortAccessorArray implements PortInterface {
 
-    private PortReader[] array;
+    private PortAccessor[] array;
     final String[] nameArray;
 
-    public PortReaderArray(String[] nameArray) {
+    public PortAccessorArray(String[] nameArray) {
         this.nameArray = nameArray;
     }
 
     @Override
     public boolean start(UI.LogUpdator u) {
         boolean allStart = true;
-        ArrayList<PortReader> pList = new ArrayList<>();
+        ArrayList<PortAccessor> pList = new ArrayList<>();
         for (String s : this.nameArray) {
-            PortReader r = new PortReader(s);
+            PortAccessor r = new PortAccessor(s);
             if (r.start(u)) {
                 pList.add(r);
             } else {
                 allStart = false;
             }
         }
-        array = pList.toArray(new PortReader[pList.size()]);
+        array = pList.toArray(new PortAccessor[pList.size()]);
         return allStart;
     }
 
     @Override
     public void stop() {
-        for (PortReader r : array) {
+        for (PortAccessor r : array) {
             r.stop();
         }
     }
@@ -46,7 +46,7 @@ public class PortReaderArray implements PortInterface {
     @Override
     public boolean writeByte(byte b) {
         boolean allWrite=true;
-        for (PortReader r : array) {
+        for (PortAccessor r : array) {
             if (!r.writeByte(b)) {
                 allWrite=false;
             }
