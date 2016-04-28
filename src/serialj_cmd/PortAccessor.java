@@ -48,12 +48,15 @@ public class PortAccessor implements PortInterface {
 
     @Override
     public void stop() {
+        int tryCount = 0;
         try {
-            if (serialPort.isOpened()) {
+            while (serialPort.isOpened() && tryCount < 10) {
                 serialPort.closePort();
                 dp.stop();
+                tryCount++;
+                Thread.sleep(10);
             }
-        } catch (SerialPortException ex) {
+        } catch (SerialPortException | InterruptedException ex) {
             updator.updateString(ex.toString() + "\r\n");
         }
     }

@@ -26,6 +26,7 @@ public class PortAccessorArray implements PortInterface {
         ArrayList<PortAccessor> pList = new ArrayList<>();
         for (String s : this.nameArray) {
             PortAccessor r = new PortAccessor(s);
+            
             if (r.start(u)) {
                 pList.add(r);
             } else {

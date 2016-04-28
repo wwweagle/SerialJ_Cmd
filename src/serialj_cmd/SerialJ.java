@@ -15,7 +15,7 @@ public class SerialJ {
 
     public static void main(String[] args) {
 //        PortReader p=new PortReader("COM5");
-        UI ui=new UI();
+        UI ui=new UI(args);
         ui.setVisible(true);
     }
 }

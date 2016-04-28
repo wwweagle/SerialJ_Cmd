@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -26,23 +27,43 @@ public class UI extends javax.swing.JFrame {
     private LogUpdator u;
     private PortInterface p;
     private ScriptExecutor se;
-    final private String ver = "ZX Serial 1.8 @" + getPID();
+    final private String ver = "ZX Serial 1.81 @" + getPID();
 
     /**
      * Creates new form UI
      */
-    public UI() {
+    public UI(String[] args) {
 
         try {
             URL iconUrl = getClass().getResource("/rsrc/icon.png");
-            System.out.println(iconUrl.toString());
+//            System.out.println(iconUrl.toString());
             this.setIconImage(ImageIO.read(iconUrl));
         } catch (IOException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        portNames = SerialPortList.getPortNames();
+        portNames = filterList(SerialPortList.getPortNames(), args);
+
+        ArrayList<String> filteredList = new ArrayList<>();
+
         u = new LogUpdator();
         initComponents();
+    }
+
+    final String[] filterList(String[] list, String[] args) {
+        if (args.length < 1) {
+            return list;
+        }
+        ArrayList<String> filtered = new ArrayList<>();
+        PORT:
+        for (String onePort : list) {
+            for (String oneException : args) {
+                if (oneException.startsWith("-") && onePort.equalsIgnoreCase(oneException.substring(1))) {
+                    continue PORT;
+                }
+            }
+            filtered.add(onePort);
+        }
+        return filtered.toArray(new String[filtered.size()]);
     }
 
     /**
@@ -493,10 +514,7 @@ public class UI extends javax.swing.JFrame {
 
                 @Override
                 public boolean accept(File f) {
-                    if (f.isDirectory() || f.getAbsolutePath().endsWith(".txt")) {
-                        return true;
-                    }
-                    return false;
+                    return (f.isDirectory() || f.getAbsolutePath().endsWith(".txt"));
                 }
 
             });
@@ -515,33 +533,32 @@ public class UI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnScriptActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new UI().setVisible(true);
-        });
-    }
-
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(() -> {
+//            new UI().setVisible(true);
+//        });
+//    }
     public class LogUpdator {
 
         final private String[] hName;
@@ -598,14 +615,13 @@ public class UI extends javax.swing.JFrame {
         return Long.parseLong(processName.split("@")[0]);
     }
 
-    class PortManager {
-
-        boolean batch;
-        PortAccessor currentPort;
-        PortAccessor[] allPorts;
-
-    }
-
+//    class PortManager {
+//
+//        boolean batch;
+//        PortAccessor currentPort;
+//        PortAccessor[] allPorts;
+//
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
